@@ -4,16 +4,18 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- master
 
 pool:
   vmImage: 'ubuntu-latest'
 
-container: teeks99/boost-cpp-docker:gcc-7
+container: teeks99/boost-cpp-docker:gcc-9
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- script: |
+    wget https://raw.githubusercontent.com/boostorg/regression/develop/testing/src/run.py
+    python run.py --runner=regression-gcc --toolset=gcc-9~c++2a --tag=master
+  displayName: 'Run Regression Tests'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
