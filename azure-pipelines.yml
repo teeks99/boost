@@ -16,5 +16,6 @@ steps:
 - script: |
     cp user-config.jam ~/
     wget https://raw.githubusercontent.com/boostorg/regression/develop/testing/src/run.py
-    python run.py --runner=regression-gcc --toolset=gcc-9~c++2a --tag=master
+    python run.py --runner=regression-gcc --toolsets=gcc-9~c++2a --bjam-options="-j`nproc` address-model=64 --remove-test-ta
+rgets" --tag=master
   displayName: 'Run Regression Tests'
