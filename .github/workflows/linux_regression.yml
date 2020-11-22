@@ -23,7 +23,6 @@ jobs:
         run: echo ::set-output name=branch::${GITHUB_REF#refs/*/}
 
       - name: Run ${{ matrix.toolset }}
-        uses: docker://
         run: |
           cp /user-config.jam ~/
           wget https://raw.githubusercontent.com/boostorg/regression/develop/testing/src/run.py
