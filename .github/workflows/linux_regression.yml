@@ -1,0 +1,30 @@
+name: linux_regression
+on: 
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - container_img: "teeks99/boost-cpp-docker:gcc-9"
+            toolset: gcc-9~c++2a
+          - container_img: "teeks99/boost-cpp-docker:clang-11"
+            toolset: clang-11~c++20
+
+    container: imagename:${{ matrix.container_img }}
+    steps:
+      - name: Set branch name
+        id: brname
+        run: echo ::set-output name=branch::${GITHUB_REF#refs/*/}
+
+      - name: Run ${{ matrix.toolset }}
+        run: |
+          cp /user-config.jam ~/
+          wget https://raw.githubusercontent.com/boostorg/regression/develop/testing/src/run.py
+          python run.py --runner=teeks99-regression --toolsets=${{ matrix.toolset }} --tag=${{ steps.brname.outputs.branch }} --bjam-options="-j`nprocs` address-mode=64 debug-symbols=off --remove-test-targets"
+
